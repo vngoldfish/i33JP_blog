@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { FaFacebook, FaYoutube, FaTiktok, FaEnvelope, FaVolumeUp, FaVolumeMute } from "react-icons/fa";
+import {  FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 
 export default function ComingSoon() {
   const launchDate = new Date("2025-04-01T00:00:00").getTime();
