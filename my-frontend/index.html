@@ -5,6 +5,207 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + React + TS</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+
+
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        body {
+            font-family: 'Roboto Mono', monospace;
+        }
+
+          /* Mặc định cho link trong menu */
+.nav-link,
+#menu-popup nav a {
+    position: relative;
+    color: white; /* Mặc định là màu trắng */
+    transition: color 0.3s ease-in-out, transform 0.3s ease-in-out; /* Hiệu ứng hover mượt mà */
+}
+
+/* Hiệu ứng khi hover vào menu */
+.nav-link:hover,
+#menu-popup nav a:hover {
+    color: #22c55e; /* Màu xanh lá khi hover */
+    transform: scale(1.1); /* Phóng to nhẹ */
+}
+
+
+        /* Hiển thị gạch chân + màu xanh lá khi là trang hiện tại */
+.nav-link.active,
+#menu-popup nav a.active {
+    color: #22c55e !important; /* Màu xanh lá */
+    font-size: 1.125rem; /* Tăng size chữ một chút */
+    font-weight: bold; /* Đậm hơn */
+    position: relative;
+}
+
+/* Gạch chân khi là trang hiện tại */
+.nav-link.active::after,
+#menu-popup nav a.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background-color: #22c55e;
+}
+
+/* Ngăn chặn cuộn trang khi menu mở */
+body.no-scroll {
+    overflow: hidden;
+}
+
+/* Mặc định ẩn popup */
+#menu-popup {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(17, 24, 39, 0.95); /* Màu nền tối */
+    display: none;  /* Ẩn menu ban đầu */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 50;
+
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+/* Khi menu mở */
+#menu-popup.flex {
+    display: flex;  /* Hiển thị menu khi mở */
+    opacity: 1;
+    transform: scale(1);
+}
+/* Định dạng mặc định cho menu popup */
+#menu-popup nav a {
+    font-size: 1.75rem; /* Tăng size chữ */
+    font-weight: normal;
+    transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+/* Hiệu ứng khi hover vào menu popup */
+#menu-popup nav a:hover {
+    color: #22c55e;
+    transform: scale(1.1);
+}
+
+/* Đảm bảo trang hiện tại trong menu popup có cùng size chữ */
+#menu-popup nav a.active {
+    color: #22c55e !important;
+    font-size: 1.75rem !important; /* Đảm bảo cùng kích thước */
+    font-weight: bold;
+}
+
+/* Gạch chân trang hiện tại */
+#menu-popup nav a.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background-color: #22c55e;
+}
+
+/* Hover trên trang hiện tại */
+#menu-popup nav a.active:hover {
+    transform: scale(1.1);
+}
+
+
+    </style>
+
+
+    <script>
+        window.addEventListener("scroll", function () {
+            const header = document.querySelector("header");
+            if (window.scrollY > 50) {
+                header.classList.add("py-4");
+                header.classList.remove("p-8");
+            } else {
+                header.classList.add("p-8");
+                header.classList.remove("py-4");
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+        const links = document.querySelectorAll(".nav-link");
+        links.forEach(link => {
+            if (link.href === window.location.href) {
+                link.classList.add("font-bold", "border-b-2", "border-green-500", "text-green-500","active");
+            } else {
+                link.classList.remove("font-bold", "border-b-2", "border-green-500");
+            }
+        });
+    });
+       
+    
+    </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const menuPopup = document.getElementById("menu-popup");
+        const menuToggle = document.getElementById("menu-toggle");
+        const menuClose = document.getElementById("menu-close");
+
+        let isMenuOpen = false; // Biến kiểm tra menu có mở hay không
+
+        // Xác định trang hiện tại và thêm class "active" vào menu đúng
+        const currentPath = window.location.pathname;
+        const menuLinks = document.querySelectorAll(".nav-link, #menu-popup nav a"); // Chọn cả menu chính & popup
+
+        menuLinks.forEach(link => {
+            if (link.getAttribute("href") === currentPath || link.href === window.location.href) {
+                link.classList.add("active");
+            }
+        });
+
+        // Mở popup menu
+        menuToggle.addEventListener("click", function () {
+            console.log("Mở menu");
+            menuPopup.classList.remove("hidden");
+            menuPopup.classList.add("flex");
+            document.body.classList.add("no-scroll");
+            isMenuOpen = true;
+
+            setTimeout(() => {
+                isMenuOpen = false;
+            }, 300);
+        });
+
+        // Đóng popup menu khi ấn nút "X"
+        menuClose.addEventListener("click", function () {
+            console.log("Đóng menu");
+            menuPopup.classList.remove("flex");
+            menuPopup.classList.add("hidden");
+            document.body.classList.remove("no-scroll");
+        });
+
+        // Đóng menu khi bấm ra ngoài popup
+        document.addEventListener("click", function (event) {
+            if (!isMenuOpen && !menuPopup.contains(event.target) && event.target !== menuToggle) {
+                console.log("Bấm ra ngoài menu, đóng menu");
+                menuPopup.classList.remove("flex");
+                menuPopup.classList.add("hidden");
+                document.body.classList.remove("no-scroll");
+            }
+        });
+
+        // Tự động đóng menu nếu resize về PC
+        window.addEventListener("resize", function () {
+            if (window.innerWidth >= 1024) {
+                console.log("Resize lên PC, đóng menu");
+                menuPopup.classList.remove("flex");
+                menuPopup.classList.add("hidden");
+                document.body.classList.remove("no-scroll");
+            }
+        });
+        
+    });
+</script>
   </head>
   <body>
     <div id="root"></div>
