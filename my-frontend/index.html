@@ -145,67 +145,7 @@ body.no-scroll {
        
     
     </script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const menuPopup = document.getElementById("menu-popup");
-        const menuToggle = document.getElementById("menu-toggle");
-        const menuClose = document.getElementById("menu-close");
 
-        let isMenuOpen = false; // Biến kiểm tra menu có mở hay không
-
-        // Xác định trang hiện tại và thêm class "active" vào menu đúng
-        const currentPath = window.location.pathname;
-        const menuLinks = document.querySelectorAll(".nav-link, #menu-popup nav a"); // Chọn cả menu chính & popup
-
-        menuLinks.forEach(link => {
-            if (link.getAttribute("href") === currentPath || link.href === window.location.href) {
-                link.classList.add("active");
-            }
-        });
-
-        // Mở popup menu
-        menuToggle.addEventListener("click", function () {
-            console.log("Mở menu");
-            menuPopup.classList.remove("hidden");
-            menuPopup.classList.add("flex");
-            document.body.classList.add("no-scroll");
-            isMenuOpen = true;
-
-            setTimeout(() => {
-                isMenuOpen = false;
-            }, 300);
-        });
-
-        // Đóng popup menu khi ấn nút "X"
-        menuClose.addEventListener("click", function () {
-            console.log("Đóng menu");
-            menuPopup.classList.remove("flex");
-            menuPopup.classList.add("hidden");
-            document.body.classList.remove("no-scroll");
-        });
-
-        // Đóng menu khi bấm ra ngoài popup
-        document.addEventListener("click", function (event) {
-            if (!isMenuOpen && !menuPopup.contains(event.target) && event.target !== menuToggle) {
-                console.log("Bấm ra ngoài menu, đóng menu");
-                menuPopup.classList.remove("flex");
-                menuPopup.classList.add("hidden");
-                document.body.classList.remove("no-scroll");
-            }
-        });
-
-        // Tự động đóng menu nếu resize về PC
-        window.addEventListener("resize", function () {
-            if (window.innerWidth >= 1024) {
-                console.log("Resize lên PC, đóng menu");
-                menuPopup.classList.remove("flex");
-                menuPopup.classList.add("hidden");
-                document.body.classList.remove("no-scroll");
-            }
-        });
-        
-    });
-</script>
   </head>
   <body>
     <div id="root"></div>
