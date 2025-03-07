@@ -33,8 +33,9 @@ useEffect(() => {
   ];
 
   // Ref để kiểm tra click bên ngoài popup
-  const notificationRef = useRef(null);
-  const profileRef = useRef(null);
+  const notificationRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
+  
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

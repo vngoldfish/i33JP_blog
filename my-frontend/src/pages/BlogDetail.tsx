@@ -8,7 +8,7 @@ const blogPosts = [
 
 const BlogDetail = () => {
   const { id } = useParams();
-  const post = blogPosts.find((p) => p.id === parseInt(id));
+  const post = id ? blogPosts.find((p) => p.id === parseInt(id)) : undefined;
 
   if (!post) {
     return <div className="text-center text-red-500 text-xl font-bold">Bài viết không tồn tại!</div>;
