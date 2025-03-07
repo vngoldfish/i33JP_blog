@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, SetStateAction } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { menuLinks, profileLinks } from "../routes"; // 💡 Import routes
 
 const Header = () => {
   const location = useLocation();
@@ -18,19 +19,12 @@ useEffect(() => {
   const menuRef = useRef<HTMLDivElement>(null);
 
 
-  const [notifications, setNotifications] = useState([
+  const notifications = [
     { id: 1, message: "Bạn có một bình luận mới trên bài viết của mình." },
     { id: 2, message: "Người theo dõi mới: @user123" },
     { id: 3, message: "Bài viết của bạn đã được phê duyệt!" }
-  ]);
-    // Xác định trang hiện tại và thêm class "active"
-  const menuLinks = [
-    { to: "/", label: "Home" },
-    { to: "/about", label: "About" },
-    { to: "/blog", label: "Blog" },
-    { to: "/categories", label: "Categories" },
-    { to: "/Achievements", label: "Projects" },
   ];
+
 
   // Ref để kiểm tra click bên ngoài popup
   const notificationRef = useRef<HTMLDivElement>(null);
@@ -198,10 +192,14 @@ useEffect(() => {
                       <p className="text-gray-500 text-sm">@tuan-nguyen-80</p>
                     </div>
                     <div className="py-2">
-                      <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100">Trang cá nhân</Link>
-                      <Link to="/my-blogs" className="block px-4 py-2 hover:bg-gray-100">Bài viết của tôi</Link>
-                      <Link to="/saved-articles" className="block px-4 py-2 hover:bg-gray-100">Bài viết đã lưu</Link>
-                      <Link to="/settings" className="block px-4 py-2 hover:bg-gray-100">Cài đặt</Link>
+
+                     
+
+                    {profileLinks.map((link) => (
+                  <Link key={link.to} to={link.to} className="block px-4 py-2 hover:bg-gray-100">
+                    {link.label}
+                  </Link>
+                ))}
                     </div>
                     <div className="border-t">
                       <button onClick={handleLogout} className="w-full px-4 py-2 text-left text-red-500 hover:bg-gray-100">
