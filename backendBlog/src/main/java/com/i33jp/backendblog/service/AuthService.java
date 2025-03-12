@@ -14,7 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
@@ -50,7 +54,7 @@ public class AuthService {
         User savedUser = userRepository.save(user);
 
         // Gán quyền mặc định ROLE_USER cho người dùng mới
-        Role userRole = roleRepository.findByName(Role.RoleName.ROLE_USER)
+        Role userRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Role USER not found"));
 
         UserRole userRoleMapping = new UserRole();
@@ -61,8 +65,8 @@ public class AuthService {
         return "User registered successfully!";
     }
 
-    // 📌 Đăng nhập người dùng
-    public Optional<String> authenticateUser(String username, String password) {
+    // Xác thực người dùng và tạo token chứa Role
+    public Optional<Map<String, Object>> authenticateUser(String username, String password) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -70,9 +74,20 @@ public class AuthService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        // ✅ Tạo token và trả về (KHÔNG LƯU VÀO DATABASE)
-        String token = jwtUtils.generateToken(user.getUsername());
-        return Optional.of(token);
+        // ✅ Lấy danh sách role của user từ UserRole (bảng trung gian)
+        List<String> roles = user.getRoles().stream()
+                .map(userRole -> userRole.getRole().getName())
+                .collect(Collectors.toList());
+
+        // ✅ Tạo token chứa username và role
+        String token = jwtUtils.generateToken(user.getUsername(), roles);
+
+        // ✅ Trả về token + role dưới dạng JSON
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("roles", roles);
+
+        return Optional.of(response);
     }
     public void logout(String token, String username) {
         if (token.startsWith("Bearer ")) {

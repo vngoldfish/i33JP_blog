@@ -5,7 +5,7 @@ import Home from "./pages/Home";
 import BlogList from "./pages/BlogList";
 import BlogDetail from "./pages/BlogDetail";
 import AchievementsPage from "./pages/Achievements";
-import LoginForm from "./pages/LoginForm";
+import Login from "./pages/Login";
 
 
 const App: React.FC = () => {
@@ -19,7 +19,7 @@ const App: React.FC = () => {
           <Route path="/blog" element={<BlogList />} />
           <Route path="/blog/:id" element={<BlogDetail />} />
           <Route path="/achievements" element={<AchievementsPage />} />
-          <Route path="/dangnhap" element={<LoginForm />} />
+          <Route path="/dangnhap" element={<Login />} />
         </Routes>
       </div>
 

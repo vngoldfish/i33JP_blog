@@ -1,21 +1,18 @@
 import { useState, useEffect, useRef, SetStateAction } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { menuLinks, profileLinks } from "../routes"; // 💡 Import routes
+import axios from "axios";
 
 const Header = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-useEffect(() => {
-  const storedLoginStatus = localStorage.getItem("isLoggedIn");
-  setIsLoggedIn(storedLoginStatus ? JSON.parse(storedLoginStatus) : false);
-}, []);
+  const token = localStorage.getItem("token");
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [username, setUsername] = useState("Nguyễn Tuấn");
-  const [avatar, setAvatar] = useState("https://storage.googleapis.com/a1aa/image/wtXFUpu0sURXVo3AZWKvy_3H9nlNKz1TlNv-8p20PRA.jpg");
+  const [avatar, setAvatar] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
 
 
@@ -30,7 +27,44 @@ useEffect(() => {
   const notificationRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   
+  useEffect(() => {
+    if (token) {
+        setIsLoggedIn(true);
+        setUsername("Nguyễn Tuấn");
+        setAvatar("https://storage.googleapis.com/a1aa/image/wtXFUpu0sURXVo3AZWKvy_3H9nlNKz1TlNv-8p20PRA.jpg");
+    }
+}, []);
 
+
+const handleLogout = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+      alert("Bạn chưa đăng nhập!");
+      return;
+  }
+
+  try {
+      await axios.post("http://localhost:8080/api/auth/logout", {}, {
+          headers: {
+            "Authorization": `${localStorage.getItem("token")}` 
+
+          }
+
+      });
+
+      // ✅ Xóa Token & Role khỏi localStorage
+      localStorage.removeItem("token");
+      localStorage.removeItem("roles");
+      setIsLoggedIn(false);
+      setShowProfileMenu(false);
+      setIsNotificationOpen(false);
+      alert("Đăng xuất thành công!");
+      window.location.href = "/login"; // Chuyển hướng về trang Login
+  } catch (error) {
+      console.error("Lỗi khi đăng xuất:", error);
+      alert("Lỗi đăng xuất. Vui lòng thử lại!");
+  }
+};
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -47,10 +81,7 @@ useEffect(() => {
       }
       
     };
-    
-
     document.addEventListener("mousedown", handleClickOutside);
-    
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -68,39 +99,21 @@ useEffect(() => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-  
-
   // Toggle popup khi click vào Avatar hoặc Thông báo
   const toggleNotificationPopup = () => {
     setIsNotificationOpen((prev) => !prev);
     setShowProfileMenu(false);
   };
-
   const toggleProfilePopup = () => {
     setShowProfileMenu((prev) => !prev);
     setIsNotificationOpen(false);
   };
-
   // Đóng popup khi chuột rời khỏi (Mobile & Desktop)
   const handleMouseLeave = (setState: React.Dispatch<SetStateAction<boolean>>) => {
     setTimeout(() => {
       setState(false);
     }, 200);
   };
-  
-
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-    setUsername("Nguyễn Tuấn");
-    setAvatar("https://storage.googleapis.com/a1aa/image/wtXFUpu0sURXVo3AZWKvy_3H9nlNKz1TlNv-8p20PRA.jpg");
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setShowProfileMenu(false);
-    setIsNotificationOpen(false);
-  };
-
   return (
     <header className="fixed top-0 left-0 w-full bg-gray-900 shadow-lg z-50 border-b border-gray-700 h-14 lg:h-20 flex items-center">
       <div className="max-w-5xl mx-auto flex items-center w-full px-4 lg:px-6 relative">
@@ -211,7 +224,7 @@ useEffect(() => {
               </div>
             </>
           ) : (
-            <button onClick={handleLogin} className="bg-green-500 text-black px-3 py-1 rounded-md text-sm font-bold">
+            <button className="bg-green-500 text-black px-3 py-1 rounded-md text-sm font-bold">
               Đăng nhập
             </button>
           )}

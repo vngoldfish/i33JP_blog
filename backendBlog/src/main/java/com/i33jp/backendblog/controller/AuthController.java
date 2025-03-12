@@ -32,21 +32,28 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> loginUser(@RequestParam String username, @RequestParam String password) {
-        Optional<String> tokenOptional = authService.authenticateUser(username, password);
+    public ResponseEntity<?> loginUser(@RequestBody Map<String, String> loginRequest) {
+        String username = loginRequest.get("username");
+        String password = loginRequest.get("password");
+        Optional<Map<String, Object>> authResponse = authService.authenticateUser(username, password);
 
-        if (tokenOptional.isPresent()) {
-            Map<String, String> response = Collections.singletonMap("token", "Bearer " + tokenOptional.get());
-            return ResponseEntity.ok(response);
+        if (authResponse.isPresent()) {
+            return ResponseEntity.ok(authResponse.get()); // Trả về token + role
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("error", "Invalid credentials!"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Collections.singletonMap("error", "Invalid credentials!"));
         }
     }
     // 📌 API Đăng xuất (Logout)
     @PostMapping("/logout")
     public ResponseEntity<String> logoutUser(@RequestHeader("Authorization") String token) {
+        System.out.println("Token nhận được khi logout: " + token);
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7); // Cắt "Bearer " để lấy token thực sự
+        }
+        System.out.println("🎯 Token sau khi cắt bỏ 'Bearer ': '" + token + "'");
 
-       String username = jwtUtils.getUsernameFromToken(token);
+        String username = jwtUtils.getUsernameFromToken(token);
        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         authService.logout(token, username);
