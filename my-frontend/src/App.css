@@ -1,0 +1,13 @@
+/* Ghi đè để xử lý bảng và đoạn text dài */
+table {
+    table-layout: fixed;
+    width: 100%;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  td, th {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+  

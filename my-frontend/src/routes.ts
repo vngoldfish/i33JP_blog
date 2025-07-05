@@ -5,6 +5,7 @@ export const menuLinks = [
     { to: "/blog", label: "Blog" },
     { to: "/categories", label: "Categories" },
     { to: "/Achievements", label: "Projects" },
+    { to: "/profile", label: "Profile" },
   ];
   
   // Các route dành cho user profile menu
@@ -13,5 +14,6 @@ export const menuLinks = [
     { to: "/my-blogs", label: "Bài viết của tôi" },
     { to: "/saved-articles", label: "Bài viết đã lưu" },
     { to: "/settings", label: "Cài đặt" },
+    { to: "/logout", label: "Đăng xuất" },
   ];
   

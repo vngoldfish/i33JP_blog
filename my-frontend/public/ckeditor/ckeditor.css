@@ -1,0 +1,13 @@
+.ck-editor__editable_inline {
+    min-height: 300px; /* hoặc 400px */
+  }
+  .ck-content pre {
+    max-height: 300px;      /* Chiều cao tối đa */
+    overflow: auto;         /* Thêm thanh cuộn khi vượt quá */
+    background: #f4f4f4;    /* Tùy chỉnh màu nền */
+    padding: 10px;
+    border-radius: 6px;
+    font-family: monospace; /* Đảm bảo font code */
+    font-size: 14px;
+  }
+  

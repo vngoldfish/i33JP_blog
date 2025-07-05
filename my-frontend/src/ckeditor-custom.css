@@ -1,0 +1,26 @@
+/* Tăng chiều cao khung nhập */
+.ck-editor__editable {
+    min-height: 350px;
+    background-color: white !important;
+    color: black !important;
+    font-size: 1rem;
+    line-height: 1.5;
+    padding: 1rem;
+  }
+  
+  /* Ẩn dòng Powered by CKEditor */
+  .ck.ck-powered-by {
+    display: none !important;
+  }
+  
+  /* Đảm bảo thanh toolbar tách biệt rõ */
+  .ck-toolbar {
+    border-radius: 0.375rem 0.375rem 0 0;
+  }
+  
+  /* Bo tròn phần khung ngoài */
+  .ck-editor {
+    border-radius: 0.375rem;
+    overflow: hidden;
+  }
+  
